@@ -619,7 +619,7 @@ DELETE /users/123
 
 它相当于：
 
-```
+```java
 @Controller
 @ResponseBody
 ```
@@ -632,7 +632,7 @@ DELETE /users/123
 
 例如：
 
-```
+```java
 @RestController
 @RequestMapping("/users")
 public class UserController {

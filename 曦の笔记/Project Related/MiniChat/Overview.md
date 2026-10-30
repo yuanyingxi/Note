@@ -192,14 +192,15 @@ minichat-gateway :8080   ← AuthGlobalFilter 验 JWT，注入 userId header
 ### 4.3.2 客户端发送消息的完整流程
 
 ```text
-客户端
+客户端 A
   │
   │ ① WebSocket 发送消息
   │    {type: 1, data: SendMessageReq}
   ▼
 ChatWebSocketHandler
   │
-  │ ② 处理客户端消息
+  │ ② 接收并解析客户端消息
+  │    获取发送者身份、校验消息参数
   ▼
 MessageServiceImpl.sendMessage()
   │
@@ -208,34 +209,89 @@ MessageServiceImpl.sendMessage()
   │       ▼
   │     MySQL：持久化聊天消息
   │
-  ├── ④ 返回 ACK
+  ├── ④ 返回 WebSocket ACK 给发送者 A
   │       {type: 2, data: {messageId}}
   │
   ├── ⑤ 投递 RocketMQ：chat-message
   │       │
   │       ▼
+  │     RocketMQ Broker
+  │       │
+  │       │ push-group 消费消息
+  │       ▼
   │     MessagePusher
   │       │
-  │       ├── 私聊：定位接收者的 WebSocket Session
+  │       ├── 1. 获取分布式锁
+  │       │      RLock: msg:push:{messageId}
   │       │
-  │       └── 群聊：Feign 查询群成员
-  │                  → 排除发送者
-  │                  → 逐个定位接收者的 Session
+  │       ├── 2. 检查 Redis 幂等标记
+  │       │      RBucket: msg:consumed:{messageId}
+  │       │      │
+  │       │      ├── 已处理：直接跳过
+  │       │      │
+  │       │      └── 未处理：继续推送
   │       │
-  │       ▼
-  │     WebSocketSession
+  │       ├── 3. 根据 chatType 分发
+  │       │      │
+  │       │      ├── 私聊（chatType = 1）
+  │       │      │      定位接收者的 WebSocket Session
+  │       │      │      通过 WebSocket 推送消息
+  │       │      │
+  │       │      └── 群聊（chatType = 2）
+  │       │             Feign 查询群成员（一次）
+  │       │             排除发送者
+  │       │             将消息序列化为 JSON（一次）
+  │       │             循环定位各成员的 Session
+  │       │             逐个推送消息
   │       │
-  │       ▼
-  │     接收方客户端
+  │       ├── 4. 设置 Redis 幂等标记
+  │       │      consumed = true，TTL = 7 天
+  │       │
+  │       ├── 5. finally 释放分布式锁
+  │       │
+  │       └── 6. 消费方法正常返回
+  │              RocketMQ 确认消费成功
+  │
   │
   └── ⑥ 投递 RocketMQ：chat-sync-topic
           │
           ▼
+        RocketMQ Broker
+          │
+          │ chat-sync-consumer-group 消费消息
+          ▼
         ChatMessageSyncConsumer
           │
+          │ 将消息同步到 Elasticsearch
           ▼
         Elasticsearch
+
+
+接收方 B / 群聊其他成员
+  │
+  │ 接收服务端 WebSocket 下行消息
+  │ {type: 0, data: ChatMessage}
+  ▼
+客户端展示聊天消息
 ```
+
+1. **WebSocket ACK（type = 2）**：消息服务返回给发送者，表示服务端已经接受并处理了发送请求，通常意味着消息已经保存到 MySQL，不代表接收者已经收到消息。
+    
+2. **MessagePusher**：负责消费 `chat-message`，通过 WebSocket 将消息实时推送给接收者。分布式锁用于避免多个实例同时处理同一条消息，幂等标记用于跳过已经处理过的消息。
+    
+3. **Redis 分布式锁与幂等标记**：
+    
+    - `msg:push:{messageId}`：控制同一条消息的并发处理。
+        
+    - `msg:consumed:{messageId}`：记录该消息是否已经完成推送处理，设置 7 天过期时间。
+        
+4. **私聊与群聊**：
+    
+    - 私聊：根据接收者 ID 定位 WebSocket Session，直接推送。
+        
+    - 群聊：通过 Feign 查询群成员，排除发送者，再逐个推送给其他成员。
+        
+5. **chat-sync-topic**：负责将聊天消息异步同步到 Elasticsearch，供后续消息搜索使用。它与 `chat-message` 是两条独立的消息处理链路。
 
 #### 第一步：接收客户端消息
 
