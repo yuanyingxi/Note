@@ -40,10 +40,11 @@ What was the main challenge in your research?
 
 **English Answer:**  
 
-One of the main challenges was that I wanted to explore how different types of distortions affect the model's robustness, but synthetic image distortions can't fully capture the complex distortions in the real world. So, I compared the model's performance on both synthetic data and the real-world images from VIWIZ, to see if they would lead to similar conclusions.
+One of the main challenges was that I wanted to explore how different types of distortions affect the model's robustness, but synthetic image distortions can't fully capture the complex distortions in the real world. So, I compared the model's performance on both synthetic data and the real-world images to see if they would lead to similar conclusions.
 
 **中文参考回答：**  
-我遇到的主要挑战之一是，我想探究不同类型的失真对模型鲁棒性的影响，但合成图像失真无法完全捕捉真实世界中复杂的失真情况。因此，我对比了模型在合成数据和 VIWIZ 真实图片上的表现，看看这两种评估方式是否会得出相似的结论。
+
+我遇到的主要挑战之一是，我想探究不同类型的失真对模型鲁棒性的影响，但合成图像失真无法完全捕捉真实世界中复杂的失真情况。因此，我对比了模型在合成数据和真实图片上的表现，看看这两种评估方式是否会得出相似的结论。
 
 # 3 What was your contribution to the project?
 
@@ -141,7 +142,7 @@ What is EEG-based emotion recognition?
 
 EEG-based emotion recognition is a task that uses deep learning models to recognize emotional states by analyzing EEG signals. 
 
-In this project, my main tasks included EEG signal preprocessing, feature extraction, model training, and hyperparameter tuning based on performance evaluation.
+In this project, my main tasks included EEG signal preprocessing, feature extraction, model training, and tuning hyperparameter based on performance evaluation.
 
 **中文参考回答：**  
 
@@ -161,23 +162,19 @@ What have you learned from your research experience?
 
 **English Answer:**
 
-My research experience taught me that developing an AI model is not just about choosing a complex architecture.
+First, I learned more about the fundamentals of AI. For example, I learned how to choose suitable neural network models for different tasks, and when it might be useful to combine different models.
 
-It also requires understanding the problem, preparing suitable datasets, designing experiments, and evaluating results carefully.
+I also learned how to choose appropriate loss functions, preprocess datasets, and tune hyperparameters based on model performance.
 
-I also learned how to identify problems, analyze experimental results, and improve my methods.
-
-Most importantly, these experiences made me more interested in conducting further research in artificial intelligence.
+These experiences helped me better understand the process of evaluating and developing AI models.
 
 **中文参考回答：**
 
-科研经历让我认识到，开发一个 AI 模型并不只是选择一个复杂的模型架构。
+首先，我学习了更多人工智能方面的基础知识。例如，我学会了如何根据不同的任务选择合适的神经网络模型，以及在什么情况下可以考虑结合不同的模型。
 
-它还需要理解研究问题、准备合适的数据集、设计实验，并认真评估实验结果。
+我还学习了如何选择合适的损失函数、进行数据集预处理，以及根据模型表现调整超参数。
 
-我也学习了如何发现问题、分析实验结果以及改进研究方法。
-
-最重要的是，这些经历让我更加希望在人工智能领域继续开展研究。
+这些经历让我对 AI 模型的开发和评估过程有了更深入的理解。
 
 # 8 What would you improve if you continued this research?
 
@@ -189,22 +186,18 @@ If you had the opportunity to continue this research, what would you improve?
 
 如果有机会继续这个研究，你会做出哪些改进？
 
-**English Answer:**
+**English Answer:**  
 
-I would focus on improving the robustness and generalization ability of the model.
+First, I would look for new datasets to test this model, because I believe robustness is crucial. 
 
-For example, I would evaluate the model on more diverse real-world data instead of relying only on a single dataset.
+Second, for the multimodal part, I would like to explore new multimodal fusion methods to improve performance. 
 
-I would also explore more effective feature fusion methods and try to improve computational efficiency.
+Third, I would try to improve the model's efficiency. For example, I could use the Mamba framework to replace the Transformer framework, as long as their performance and robustness are similar.
 
-I believe these improvements could make AI models more practical and reliable.
+**中文参考回答：**  
 
-**中文参考回答：**
+首先，我会寻找新的数据集来测试这个模型，因为我认为鲁棒性至关重要。
 
-我会重点关注模型鲁棒性和泛化能力的提升。
+其次，针对多模态部分，我想探索新的多模态融合方法以提升性能。
 
-例如，我希望在更多样化的真实场景数据上评估模型，而不是仅仅依赖单一数据集。
-
-我也会探索更加有效的特征融合方法，并尝试提高计算效率。
-
-我认为这些改进能够让 AI 模型更加实用和可靠。
+第三，我会尝试提高模型的效率。例如，在性能和鲁棒性相似的情况下，我会考虑用 Mamba 框架来替换 Transformer 框架。
