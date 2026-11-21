@@ -351,13 +351,13 @@ Jerry
 
 对比：
 
-|Comparison|Static Variable|Instance Variable|
-|---|---|---|
-|中文|静态变量|实例变量|
-|Belongs to|Class|Object|
-|Number of Copies|类级别共享一份|每个对象各自一份|
-|Access|类名或对象名|对象名|
-|Lifetime|随类的生命周期管理|随对象生命周期管理|
+| Comparison       | Static Variable | Instance Variable |
+| ---------------- | --------------- | ----------------- |
+|                  | 静态变量            | 实例变量              |
+| Belongs to       | Class           | Object            |
+| Number of Copies | 类级别共享一份         | 每个对象各自一份          |
+| Access           | 类名或对象名          | 对象名               |
+| Lifetime         | 随类的生命周期管理       | 随对象生命周期管理         |
 
 ## 3.4 Static Method（静态方法）
 
@@ -491,7 +491,7 @@ class Child extends Parent {
 
 测试：
 
-```text
+```java
 Parent p = new Child();
 p.show();
 ```
@@ -508,7 +508,7 @@ Parent
 
 如果写成：
 
-```text
+```java
 Child.show();
 ```
 
